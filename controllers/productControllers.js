@@ -5,9 +5,10 @@ const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
 
 exports.getAllProducts = asyncHandler(async (req, res) => {
+  const productsCount = await Product.countDocuments();
   const apiFeatures = new ApiFeatures(Product.find(), req.query, Product)
     .filter()
-    .paginate()
+    .paginate(productsCount)
     .search()
     .fieldsLimiting()
     .sort();
@@ -15,8 +16,9 @@ exports.getAllProducts = asyncHandler(async (req, res) => {
   const products = await apiFeatures.query;
 
   res.status(200).json({
-    results: products.length,
     status: "success",
+    results: products.length,
+    pagination: apiFeatures.paginationResult,
     products,
   });
 });

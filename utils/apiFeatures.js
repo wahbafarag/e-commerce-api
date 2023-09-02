@@ -16,25 +16,6 @@ class ApiFeatures {
     return this;
   }
 
-  sort() {
-    if (this.queryString.sort) {
-      let sortBy = this.queryString.sort;
-      sortBy = sortBy.split(",").join("  ");
-      this.query = this.query.sort(sortBy);
-    } else {
-      this.query = this.query.sort("-createdAt");
-    }
-    return this;
-  }
-
-  paginate() {
-    const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 1 || 20;
-    const skip = (page - 1) * limit;
-    this.query = this.query.skip(skip).limit(limit);
-    return this;
-  }
-
   fieldsLimiting() {
     if (this.queryString.fields) {
       let { fields } = this.queryString;
@@ -60,6 +41,36 @@ class ApiFeatures {
 
       this.query = this.Model.find(querySearch);
     }
+    return this;
+  }
+
+  sort() {
+    if (this.queryString.sort) {
+      let sortBy = this.queryString.sort;
+      sortBy = sortBy.split(",").join("  ");
+      this.query = this.query.sort(sortBy);
+    } else {
+      this.query = this.query.sort("-createdAt");
+    }
+    return this;
+  }
+
+  paginate(documentsCount) {
+    const page = this.queryString.page * 1 || 1;
+    const limit = this.queryString.limit * 1 || 5;
+    const skip = (page - 1) * limit;
+    const endIdx = page * limit;
+
+    const pagination = {};
+    pagination.currentPage = page;
+    pagination.limit = limit;
+    pagination.noOfPages = Math.ceil(documentsCount / limit);
+
+    if (endIdx < documentsCount) pagination.nextPage = page + 1; // next page
+    if (skip > 0) pagination.prevPage = page - 1; // prev page
+
+    this.query = this.query.skip(skip).limit(limit);
+    this.paginationResult = pagination;
     return this;
   }
 }
