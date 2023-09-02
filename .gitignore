@@ -1,0 +1,7 @@
+.env
+node_modules/
+
+/config.env
+
+/notes.js
+/notes.md
