@@ -3,13 +3,14 @@ const slugify = require("slugify");
 const Product = require("../models/productModel");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
+const factory = require("./handler-factory");
 
 exports.getAllProducts = asyncHandler(async (req, res) => {
   const productsCount = await Product.countDocuments();
   const apiFeatures = new ApiFeatures(Product.find(), req.query, Product)
     .filter()
     .paginate(productsCount)
-    .search()
+    .search("Product")
     .fieldsLimiting()
     .sort();
 
@@ -42,26 +43,13 @@ exports.createProduct = asyncHandler(async (req, res) => {
   });
 });
 
-exports.updateProduct = asyncHandler(async (req, res, next) => {
-  //
-  const { id } = req.params;
-  if (req.body.title) req.body.slug = slugify(req.body.title);
+exports.updateProduct = factory.updateOne(Product);
 
-  const product = await Product.findByIdAndUpdate({ _id: id }, req.body, {
-    new: true,
-    runValidators: true,
-  });
+exports.deleteProduct = factory.deleteOne(Product);
 
-  if (!product) return next(new ApiError("No Products found to update", 404));
-  res.status(200).json({
-    status: "success",
-    product,
-  });
-});
-
-exports.deleteProduct = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const product = await Product.findByIdAndDelete(id);
-  if (!product) return next(new ApiError("No Products found to delete", 404));
-  res.status(204).json();
-});
+// exports.deleteProduct = asyncHandler(async (req, res, next) => {
+//   const { id } = req.params;
+//   const product = await Product.findByIdAndDelete(id);
+//   if (!product) return next(new ApiError("No Products found to delete", 404));
+//   res.status(204).json();
+// });

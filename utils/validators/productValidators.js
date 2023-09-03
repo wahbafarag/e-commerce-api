@@ -134,7 +134,7 @@ exports.updateProductValidator = [
   body("title")
     .optional()
     .custom((val, { req }) => {
-      req.body.slug = slugify(val);
+      if (val) req.body.slug = slugify(val);
       return true;
     }),
   check("priceAfterDiscount")

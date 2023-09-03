@@ -27,17 +27,23 @@ class ApiFeatures {
     return this;
   }
 
-  search() {
+  search(modelName) {
     if (this.queryString.keyword) {
-      const querySearch = {};
-      querySearch.$or = [
-        {
-          title: { $regex: this.queryString.keyword, $options: "i" },
-        },
-        {
-          description: { $regex: this.queryString.keyword, $options: "i" },
-        },
-      ];
+      let querySearch = {};
+      if (modelName === "Product") {
+        querySearch.$or = [
+          {
+            title: { $regex: this.queryString.keyword, $options: "i" },
+          },
+          {
+            description: { $regex: this.queryString.keyword, $options: "i" },
+          },
+        ];
+      } else {
+        querySearch = {
+          name: { $regex: this.queryString.keyword, $options: "i" },
+        };
+      }
 
       this.query = this.Model.find(querySearch);
     }
