@@ -46,10 +46,3 @@ exports.createProduct = asyncHandler(async (req, res) => {
 exports.updateProduct = factory.updateOne(Product);
 
 exports.deleteProduct = factory.deleteOne(Product);
-
-// exports.deleteProduct = asyncHandler(async (req, res, next) => {
-//   const { id } = req.params;
-//   const product = await Product.findByIdAndDelete(id);
-//   if (!product) return next(new ApiError("No Products found to delete", 404));
-//   res.status(204).json();
-// });
