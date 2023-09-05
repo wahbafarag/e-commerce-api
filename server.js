@@ -1,5 +1,5 @@
+const path = require("path");
 const dotenv = require("dotenv");
-
 dotenv.config({ path: "./config.env" });
 const express = require("express");
 const morgan = require("morgan");
@@ -21,6 +21,7 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

@@ -19,18 +19,25 @@ exports.createCategoryValidator = [
     .isLength({ min: 4 })
     .withMessage("Category name is too short")
     .isLength({ max: 30 })
-    .withMessage("Category name is too long"),
+    .withMessage("Category name is too long")
+    .custom((value, { req }) => {
+      if (value) req.body.slug = slugify(value);
+      return true;
+    }),
   validatorMiddleware,
 ];
 
 exports.updateCategoryValidator = [
   check("id").isMongoId().withMessage("Invalid format for Category Id"),
-  body("name").custom((value, { req }) => {
-    if (value) req.body.slug = slugify(value);
-    return true;
-  }),
+  body("name")
+    .optional()
+    .custom((value, { req }) => {
+      if (value) req.body.slug = slugify(value);
+      return true;
+    }),
   check("name")
     .notEmpty()
+    .optional()
     .withMessage("Category Name is required")
     .isLength({ min: 4 })
     .withMessage("Category name is too short")

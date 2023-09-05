@@ -6,13 +6,23 @@ const brandValidators = require("../utils/validators/brandValidators");
 
 router
   .route("/")
-  .post(brandValidators.createBrandValidator, brandControllers.createBrand)
+  .post(
+    brandControllers.uploadBrandImage,
+    brandControllers.resizeBrandImage,
+    brandValidators.createBrandValidator,
+    brandControllers.createBrand
+  )
   .get(brandControllers.getAllBrands);
 
 router
   .route("/:id")
   .get(brandValidators.getBrandValidator, brandControllers.getBrand)
-  .patch(brandValidators.updateBrandValidator, brandControllers.updateBrand)
+  .patch(
+    brandControllers.uploadBrandImage,
+    brandControllers.resizeBrandImage,
+    brandValidators.updateBrandValidator,
+    brandControllers.updateBrand
+  )
   .delete(brandValidators.deleteBrandValidator, brandControllers.deleteBrand);
 
 module.exports = router;

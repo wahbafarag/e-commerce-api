@@ -15,6 +15,7 @@ exports.createProductValidator = [
       req.body.slug = slugify(val);
       return true;
     }),
+
   check("description")
     .notEmpty()
     .withMessage("Product description is required")
