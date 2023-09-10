@@ -1,4 +1,3 @@
-const multer = require("multer");
 const sharp = require("sharp");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
@@ -10,13 +9,15 @@ const { uploadSingleImage } = require("../middlewares/image-upload");
 exports.uploadCategoryImage = uploadSingleImage("image");
 
 exports.resizeCategoryImage = asyncHandler(async (req, res, next) => {
-  const fileName = `category-${uuidv4()}-${Date.now()}.jpeg`;
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(path.join(__dirname, "../uploads/categories/", fileName));
-  req.body.image = fileName;
+  if (req.file) {
+    const fileName = `category-${uuidv4()}-${Date.now()}.jpeg`;
+    await sharp(req.file.buffer)
+      .resize(500, 500)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(path.join(__dirname, "../uploads/categories/", fileName));
+    req.body.image = fileName;
+  }
   next();
 });
 

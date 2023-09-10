@@ -28,13 +28,20 @@ const userSchema = new Schema(
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters long"],
     },
+
+    passwordChangedAt: Date,
+
+    passwordResetToken: String,
+    resetTokenExpires: Date,
+    resetPasswordVerified: Boolean,
+
     phone: String,
 
     profileImage: String,
 
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "admin", "manager"],
       default: "user",
     },
     active: {

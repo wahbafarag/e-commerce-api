@@ -60,6 +60,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 
   //doc.password = await bcrypt.hash(req.body.password, 12);
   doc.password = req.body.password;
+  doc.passwordChangedAt = Date.now();
   await doc.save();
 
   res.status(200).json({
