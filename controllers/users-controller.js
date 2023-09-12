@@ -1,12 +1,14 @@
 const path = require("path");
 const asyncHandler = require("express-async-handler");
 const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
 const factory = require("./handler-factory");
 const User = require("../models/user-model");
 const { uploadSingleImage } = require("../middlewares/image-upload");
 const ApiError = require("../utils/apiError");
+const AsyncHandler = require("express-async-handler");
 
 exports.uploadUserImage = uploadSingleImage("profileImage");
 
@@ -70,3 +72,71 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 });
 
 exports.deleteUser = factory.deleteOne(User);
+
+exports.getMe = asyncHandler(async (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+});
+
+exports.updateLoggedUserPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (!user)
+    return next(
+      new ApiError("You are not Logged in , Please login and try again", 404)
+    );
+
+  user.password = req.body.password;
+  user.passwordChangedAt = Date.now();
+  await user.save();
+
+  const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+
+  res.status(200).json({
+    status: "success",
+    token,
+
+    user,
+  });
+});
+
+exports.updateMe = asyncHandler(async (req, res, next) => {
+  // except pass , role
+
+  const doc = await User.findByIdAndUpdate(
+    { _id: req.user.id },
+    {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+    },
+    { new: true }
+  );
+  if (!doc)
+    return next(
+      new ApiError("Cant update your info ,Please try again later", 404)
+    );
+
+  res.status(200).json({
+    status: "success",
+    data: doc,
+  });
+});
+
+exports.deactivateMe = AsyncHandler(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { active: false });
+  res.status(200).json({
+    status: "success",
+
+    message: "Your account is deactivated, sorry to see you go.",
+  });
+});
+
+exports.activateMe = AsyncHandler(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { active: true });
+  res.status(200).json({
+    status: "success",
+    message: "Welcome Back! Your account is activated now you can login",
+  });
+});

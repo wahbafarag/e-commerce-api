@@ -147,3 +147,37 @@ exports.deleteUserValidator = [
   check("id").isMongoId().withMessage("Invalid format for Brand Id"),
   validatorMiddleware,
 ];
+
+exports.updateMeValidator = [
+  body("name")
+    .optional()
+    .custom((value, { req }) => {
+      if (value) req.body.slug = slugify(value);
+      return true;
+    }),
+  check("name")
+    .optional()
+    .isLength({ min: 4 })
+    .withMessage("User name is too short")
+    .isLength({ max: 30 })
+    .withMessage("User name is too long"),
+
+  check("email")
+    .optional()
+    .isEmail()
+    .withMessage("Email is invalid")
+    .custom((value, { req }) => {
+      return User.findOne({ email: value }).then((user) => {
+        if (user) {
+          return Promise.reject(new ApiError("Email already in use", 400));
+        }
+      });
+    }),
+
+  check("phone")
+    .optional()
+    .isMobilePhone(["ar-EG", "ar-SA"])
+    .withMessage("Invalid phone number"),
+
+  validatorMiddleware,
+];
