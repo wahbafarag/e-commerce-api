@@ -81,14 +81,14 @@ exports.protect = AsyncHandler(async (req, res, next) => {
       )
     );
 
-  // check if user is still active
-  if (!user.active)
-    return next(
-      new ApiError(
-        "Your account is deactivated , Please contact the admin to activate your account.",
-        401
-      )
-    );
+  // // check if user is still active
+  // if (!user.active)
+  //   return next(
+  //     new ApiError(
+  //       "Your account is deactivated , Please contact the admin to activate your account.",
+  //       401
+  //     )
+  //   );
 
   if (
     user.passwordChangedAt &&

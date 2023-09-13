@@ -40,7 +40,6 @@ router.patch(
 router.delete(
   "/me/delete-profile",
   authController.protect,
-
   usersController.getMe,
   usersController.deactivateMe
 );

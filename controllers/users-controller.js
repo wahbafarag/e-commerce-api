@@ -135,6 +135,7 @@ exports.deactivateMe = AsyncHandler(async (req, res, next) => {
 
 exports.activateMe = AsyncHandler(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user._id, { active: true });
+  console.log(req.user);
   res.status(200).json({
     status: "success",
     message: "Welcome Back! Your account is activated now you can login",
