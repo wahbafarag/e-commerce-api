@@ -12,7 +12,7 @@
 - User Profile : Update my info , Change Pass , activate & deactivate me
 - Upload Single , Multiple images : Profile image , brand , category , sub-category image , product image Cover , product images
 - Sending Reset Password Emails
-               
+- Validation with express-validator               
 
 
 -- Not Completely done
