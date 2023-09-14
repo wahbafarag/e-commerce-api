@@ -34,14 +34,17 @@ exports.createOne = (Model) =>
     });
   });
 
-exports.getOne = (Model) =>
+exports.getOne = (Model, popOptions) =>
   asyncHandler(async (req, res, next) => {
-    const doc = await Model.findById(req.params.id);
+    let doc = await Model.findById(req.params.id);
     if (!doc) return next(new ApiError("Document not found", 404));
+    if (popOptions) doc = await doc.populate(popOptions);
+
+    const document = await doc;
 
     res.status(200).json({
       status: "success",
-      doc,
+      document,
     });
   });
 

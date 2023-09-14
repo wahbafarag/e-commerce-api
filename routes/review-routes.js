@@ -3,6 +3,7 @@ const router = express.Router({ mergeParams: true });
 const reviewController = require("../controllers/review-controller");
 const authController = require("../controllers/auth-controller");
 const reviewValidators = require("../utils/validators/review-validators");
+
 router
   .route("/")
   .post(
@@ -12,7 +13,7 @@ router
     reviewValidators.createReviewValidator,
     reviewController.createReview
   )
-  .get(reviewController.getAllReviews);
+  .get(reviewController.setFilterObject, reviewController.getAllReviews);
 
 router
   .route("/:id")

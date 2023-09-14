@@ -3,6 +3,9 @@ const router = express.Router();
 const authController = require("../controllers/auth-controller");
 const productControllers = require("../controllers/productControllers");
 const productValidators = require("../utils/validators/productValidators");
+const reviewRoutes = require("./review-routes");
+
+router.use("/:productId/reviews", reviewRoutes); // parent
 
 router
   .route("/")

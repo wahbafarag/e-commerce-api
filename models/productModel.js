@@ -69,7 +69,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps: true, virtuals: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 productSchema.pre(/^find/, function (next) {
@@ -98,6 +98,12 @@ productSchema.post("save", function (doc) {
     doc.images = doc.images.map(
       (image) => `${process.env.BASE_URL}/products/${image}`
     );
+});
+
+productSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id",
 });
 
 const Product = mongoose.model("Product", productSchema);
