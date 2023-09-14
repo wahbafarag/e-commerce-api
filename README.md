@@ -4,7 +4,7 @@
 
 ### Features :
 - Brand Crud
-- Product Crud
+- Product Crud 
 - Category Crud
 - Sub-Category Crud
 - Reviews Crud
@@ -13,6 +13,6 @@
 - Upload Single , Multiple images : Profile image , brand , category , sub-category image , product image Cover , product images
 - Sending Reset Password Emails
 - Validation with express-validator               
-
-
+- Nested routes : Product -> Reviews , Category -> Subcategory
+  
 -- Not Completely done
