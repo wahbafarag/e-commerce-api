@@ -69,7 +69,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: true, virtuals: true }
 );
 
 productSchema.pre(/^find/, function (next) {
