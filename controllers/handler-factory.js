@@ -19,6 +19,7 @@ exports.updateOne = (Model) =>
     });
     if (!doc) return next(new ApiError("Nothing found to be updated", 404));
 
+    await doc.save();
     res.status(200).json({
       status: "success",
       doc,
