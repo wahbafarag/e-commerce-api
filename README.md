@@ -18,3 +18,5 @@
 - Nested routes : Product -> Reviews , Category -> Subcategory
   
 -- Not Completely done
+
+** Todo : wishlist , user addresses validation
