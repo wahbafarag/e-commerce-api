@@ -3,12 +3,10 @@ const asyncHandler = require("express-async-handler");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const sharp = require("sharp");
-const bcrypt = require("bcryptjs");
 const factory = require("./handler-factory");
 const User = require("../models/user-model");
 const { uploadSingleImage } = require("../middlewares/image-upload");
 const ApiError = require("../utils/apiError");
-const AsyncHandler = require("express-async-handler");
 
 exports.uploadUserImage = uploadSingleImage("profileImage");
 
@@ -124,7 +122,7 @@ exports.updateMe = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.deactivateMe = AsyncHandler(async (req, res, next) => {
+exports.deactivateMe = asyncHandler(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user._id, { active: false });
   res.status(200).json({
     status: "success",
@@ -133,7 +131,7 @@ exports.deactivateMe = AsyncHandler(async (req, res, next) => {
   });
 });
 
-exports.activateMe = AsyncHandler(async (req, res, next) => {
+exports.activateMe = asyncHandler(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user._id, { active: true });
   console.log(req.user);
   res.status(200).json({
