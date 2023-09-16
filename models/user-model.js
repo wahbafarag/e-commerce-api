@@ -56,6 +56,19 @@ const userSchema = new Schema(
         ref: "Product",
       },
     ],
+
+    address: [
+      {
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+        },
+        alias: String,
+        details: String,
+        city: String,
+        postalCode: String,
+        phone: String,
+      },
+    ],
   },
   { timestamps: true }
 );
