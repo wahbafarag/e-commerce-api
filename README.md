@@ -8,6 +8,7 @@
 - Category Crud
 - Sub-Category Crud
 - Reviews Crud
+- Wishlist : AddToWishlist , RemoveFromWishList , GetMyWishList , ClearMyWishList
 - Authentication , Authorization , Forgot-Reset functionality , user roles limitations
 - User Profile : Update my info , Change Pass , activate & deactivate me
 - Upload Single , Multiple images : Profile image , brand , category , sub-category image , product image Cover , product images
