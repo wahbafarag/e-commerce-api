@@ -8,6 +8,7 @@
 - Category Crud
 - Sub-Category Crud
 - Reviews Crud
+- Coupons Crud
 - Wishlist : AddToWishlist , RemoveFromWishList , GetMyWishList and ClearMyWishList
 - User Addresses : Add , Get all Addresses , Update , Delete address and Clear all addresses
 - Authentication , Authorization , Forgot-Reset functionality and user roles limitations
