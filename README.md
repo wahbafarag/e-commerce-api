@@ -20,4 +20,4 @@
   
 -- Not Completely done
 
-** Todo : wishlist , user addresses validation
+** Todo : wishlist , user addresses , coupons , cart validation
