@@ -8,8 +8,10 @@
 - Category Crud
 - Sub-Category Crud
 - Reviews Crud
+- Coupons Crud
 - Wishlist : AddToWishlist , RemoveFromWishList , GetMyWishList and ClearMyWishList
 - User Addresses : Add , Get all Addresses , Update , Delete address and Clear all addresses
+- Cart : Add Product to cart , Get current user Cart , clear current user cart , remove and update cart item
 - Authentication , Authorization , Forgot-Reset functionality and user roles limitations
 - User Profile : Update my info , Change Pass , activate & deactivate me
 - Upload Single , Multiple images : Profile image , brand , category , sub-category image , product image Cover and product images
@@ -19,4 +21,4 @@
   
 -- Not Completely done
 
-** Todo : wishlist , user addresses validation
+** Todo : wishlist , user addresses , coupons , cart validation
