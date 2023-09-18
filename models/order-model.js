@@ -56,11 +56,25 @@ const orderSchema = new Schema(
     deliveredAt: Date,
 
     shippingAddress: {
-      type: String,
-      required: [true, "Please tell us your detailed shipping address"],
+      details: String,
+      city: String,
+      phone: String,
+      postalCode: String,
     },
   },
   { timestamps: true }
 );
+
+orderSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "user",
+    select: "name email phone profileImage",
+  }).populate({
+    path: "cartItems.product",
+    select: "name price imageCover",
+  });
+
+  next();
+});
 
 module.exports = mongoose.model("Order", orderSchema);
