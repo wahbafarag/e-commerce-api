@@ -13,6 +13,11 @@ const couponSchema = new Schema({
     required: [true, "Coupon Expiry Date is required"],
   },
 
+  // used: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+
   discount: {
     type: Number,
     required: [true, "Coupon Discount is required"],

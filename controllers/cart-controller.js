@@ -2,6 +2,7 @@ const AsyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const Cart = require("../models/cart-model");
 const Product = require("../models/productModel");
+const Coupon = require("../models/coupon-model");
 
 const calculateCartPrice = (cart) => {
   let totalPrice = 0;
@@ -9,19 +10,10 @@ const calculateCartPrice = (cart) => {
     totalPrice += item.quantity * item.price;
   });
   cart.totalCartPrice = totalPrice;
+  cart.priceAfterDiscount = undefined;
   return totalPrice;
 };
 
-// scenarios:
-// 1. Check if cart exists for the user
-// 2. If cart exists, check if the product already exists in cart
-// 3. If product exists, increment the quantity
-// if product exists and the color is different, add the product as a new item in cart
-// 4. If product does not exist, add the product to cart
-// 5. If cart does not exist, create a new cart and add the product to cart
-// 6. Calculate the total cart price
-// 7. Calculate the price after discount (if coupon is applied)
-// 8. Save the cart
 exports.addProductToCart = AsyncHandler(async (req, res, next) => {
   const { productId, color } = req.body;
   const product = await Product.findById(productId).select("price");
@@ -149,6 +141,30 @@ exports.updateCartItemQuantity = AsyncHandler(async (req, res, next) => {
     status: "success",
     message: "Cart item updated successfully",
     noOfCartItem: cart.cartItems.length,
+    data: cart,
+  });
+});
+
+exports.applyCouponOnCart = AsyncHandler(async (req, res, next) => {
+  // coupon from body && not expired
+  const coupon = await Coupon.findOne({
+    name: req.body.name,
+    expiry: { $gt: Date.now() },
+  });
+  if (!coupon) return next(new ApiError("Invalid Coupon or expired", 404));
+
+  const cart = await Cart.findOne({ user: req.user._id });
+  if (!cart) return next(new ApiError("Cart not available", 404));
+
+  const totalPriceBeforeDiscount = cart.totalCartPrice;
+  cart.priceAfterDiscount = (
+    totalPriceBeforeDiscount -
+    (totalPriceBeforeDiscount * coupon.discount) / 100
+  ).toFixed(2);
+  await cart.save();
+  res.status(200).json({
+    status: "success",
+    message: "Coupon applied successfully",
     data: cart,
   });
 });
