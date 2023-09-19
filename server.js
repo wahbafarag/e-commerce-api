@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
+const compression = require("compression");
 
 const { dbConnection } = require("./config/db");
 const ApiError = require("./utils/apiError");
@@ -16,6 +18,9 @@ dbConnection();
 const app = express();
 
 // Middlewares
+app.use(cors());
+app.options("*", cors()); // pre-flight request
+app.use(compression());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +33,7 @@ mountRoutes(app);
 
 // 404 error handler
 app.all("*", (req, res, next) => {
-  next(new ApiError("Route You looking for not found", 400));
+  next(new ApiError("Page not found!", 400));
 });
 
 // global error handler (express errors)

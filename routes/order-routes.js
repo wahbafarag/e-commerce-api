@@ -5,6 +5,12 @@ const orderController = require("../controllers/order-controller");
 
 router.use(authController.protect);
 
+router.get(
+  "/checkout-session/:cartId",
+  authController.restrictTo("user"),
+  orderController.checkoutSession
+);
+
 router.post(
   "/cash-order/:cartId",
   authController.restrictTo("user"),

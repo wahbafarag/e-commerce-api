@@ -1,4 +1,5 @@
 const AsyncHandler = require("express-async-handler");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const ApiError = require("../utils/apiError");
 const Order = require("../models/order-model");
 const Cart = require("../models/cart-model");
@@ -127,4 +128,44 @@ exports.updateOrderToDelivered = AsyncHandler(async (req, res, next) => {
     message: "Order delivered successfully",
     order: updatedOrder,
   });
+});
+exports.checkoutSession = AsyncHandler(async (req, res, next) => {
+  const { cartId } = req.params;
+  const taxPrice = 0;
+  const shippingPrice = 0;
+
+  const cart = await Cart.findById(cartId);
+  if (!cart) {
+    return next(new ApiError(`You dont have any available carts`, 404));
+  }
+
+  const cartPrice = cart.priceAfterDiscount
+    ? cart.priceAfterDiscount
+    : cart.totalCartPrice;
+  const totalOrderPrice = cartPrice + taxPrice + shippingPrice;
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    success_url: `${req.protocol}://${req.get("host")}/api/v1/orders/my-orders`,
+    cancel_url: `${req.protocol}://${req.get("host")}/api/v1/cart/get-cart`,
+    customer_email: req.user.email,
+    client_reference_id: req.params.cartId,
+    metadata: req.body.shippingAddress,
+
+    line_items: [
+      {
+        price_data: {
+          currency: "egp",
+          unit_amount: totalOrderPrice * 100,
+          product_data: {
+            name: req.user.name,
+          },
+        },
+        quantity: 1,
+      },
+    ],
+  });
+
+  res.status(200).json({ status: "success", session });
 });
