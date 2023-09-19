@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "start:dev": "node server.js",
-    "start": "SET NODE_ENV=production && node server.js"
+    "start": "cross-env NODE_ENV=production node server.js"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +33,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^8.39.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",
