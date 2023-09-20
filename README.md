@@ -20,6 +20,10 @@
 - Validation with express-validator               
 - Nested routes : Product -> Reviews , Category -> Subcategory
   
--- Not Completely done
+### Security : 
+- Password Encryption
+- Request Size Limit
+- Precautions Against Brute Forcing
+- HTTP Parameter Pollution
 
 ** Todo : wishlist , user addresses , coupons , cart validation
