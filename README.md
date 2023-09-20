@@ -25,5 +25,8 @@
 - Request Size Limit
 - Precautions Against Brute Forcing
 - HTTP Parameter Pollution
+- Input Validation (Data Sanitization )
+- Cross Site Scripting
+
 
 ** Todo : wishlist , user addresses , coupons , cart validation
