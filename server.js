@@ -21,6 +21,7 @@ const app = express();
 app.use(cors());
 app.options("*", cors()); // pre-flight request
 app.use(compression());
+app.post("/webhook-checkout", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
