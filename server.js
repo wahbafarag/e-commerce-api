@@ -5,7 +5,11 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const compression = require("compression");
+const { rateLimit } = require("express-rate-limit");
+const csrf = require("csurf");
+const hpp = require("hpp");
 
+//
 const { dbConnection } = require("./config/db");
 const ApiError = require("./utils/apiError");
 const globalErrorHandler = require("./middlewares/errorHandling");
@@ -27,12 +31,36 @@ app.post(
   express.raw({ type: "application/json" }),
   webhookCheckout
 );
-app.use(express.json());
+app.use(
+  express.json({
+    limit: "15kb",
+  })
+);
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 50,
+  message: "Too many requests , please try again in 15 minutes!",
+});
+app.use("/api", limiter);
+app.use(
+  hpp({
+    whitelist: [
+      "price",
+      "name",
+      "title",
+      "sold",
+      "quantity",
+      "ratingsAverage",
+      "ratingsQuantity",
+      "fields",
+    ], // and so on
+  })
+);
 
 // Mounting Routes
 mountRoutes(app);
