@@ -6,9 +6,9 @@ const morgan = require("morgan");
 const cors = require("cors");
 const compression = require("compression");
 const { rateLimit } = require("express-rate-limit");
-const csrf = require("csurf");
 const hpp = require("hpp");
-
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 //
 const { dbConnection } = require("./config/db");
 const ApiError = require("./utils/apiError");
@@ -46,6 +46,8 @@ const limiter = rateLimit({
   limit: 50,
   message: "Too many requests , please try again in 15 minutes!",
 });
+app.use(mongoSanitize());
+app.use(xss());
 app.use("/api", limiter);
 app.use(
   hpp({

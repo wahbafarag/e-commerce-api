@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const sendEmails = require("../utils/emails");
 const User = require("../models/user-model");
 const ApiError = require("../utils/apiError");
+const { sanitizeUser } = require("../utils/sanatize-data");
 
 exports.signup = AsyncHandler(async (req, res, next) => {
   const { name, email, password, phone } = req.body;
@@ -20,9 +21,7 @@ exports.signup = AsyncHandler(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     token,
-    data: {
-      user,
-    },
+    data: sanitizeUser(user),
   });
 });
 
@@ -42,9 +41,7 @@ exports.login = AsyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     token,
-    data: {
-      user,
-    },
+    data: sanitizeUser(user),
   });
 });
 
