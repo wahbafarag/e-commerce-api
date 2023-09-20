@@ -10,6 +10,7 @@ const { dbConnection } = require("./config/db");
 const ApiError = require("./utils/apiError");
 const globalErrorHandler = require("./middlewares/errorHandling");
 const mountRoutes = require("./routes");
+const { webhookCheckout } = require("./controllers/order-controller");
 
 // Database Connection
 dbConnection();
@@ -21,7 +22,11 @@ const app = express();
 app.use(cors());
 app.options("*", cors()); // pre-flight request
 app.use(compression());
-app.post("/webhook-checkout", express.raw({ type: "application/json" }));
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckout
+);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
